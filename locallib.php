@@ -173,6 +173,7 @@ function urlencode_recursive($var) {
 }
 
 function urldecode_recursive($var) {
+    cr_fix_object($var);
     if (is_object($var)) {
         $newvar = new \stdClass();
         $properties = get_object_vars($var);
@@ -191,6 +192,12 @@ function urldecode_recursive($var) {
     }
 
     return $newvar;
+}
+
+function cr_fix_object(&$object) {
+    if (!is_object($object) && gettype($object) == 'object') {
+        $object = (object)(array)unserialize(serialize($object));
+    }
 }
 
 function cr_get_my_reports($courseid, $userid, $allcourses = true) {
